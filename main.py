@@ -3,6 +3,9 @@ import matplotlib.pyplot as plt
 from scipy.integrate import quad
 from scipy.misc import derivative
 import sympy as sp
+import time
+
+start_time = time.perf_counter()
 
 
 
@@ -11,13 +14,14 @@ x = sp.symbols('x')
 
 
 
-symbolic_f = x**2  # !!!! Define the function/expression here !!!!
+symbolic_f = (x**x)  # !!!! Define the function/expression here !!!!
+f = sp.lambdify(x, symbolic_f, "numpy") # Used to convert common math functions from sympy library to numpy
+
 a, b = 0, 2  # Define the range of integration, (a, b)
 axis = 'x'  # Choose the axis of rotation ('x' or 'y')
 
 
 
-f = sp.lambdify(x, symbolic_f, "numpy") # Used to convert common math functions from sympy library to numpy
 
 
 '''
@@ -90,8 +94,7 @@ def main():
 
 
     # Calculate surface area based on axis of rotation
-    print("help")
-    print((derivative(f, x, dx=1e-6)))
+    # print((derivative(f, x, dx=1e-6)))
     if axis == 'x': # Rotation around x-axis
         surface_area, _ = quad(lambda x: 2 * np.pi * f(x) * np.sqrt(1 + derivative(f, x, dx=1e-6)**2), a, b)
     
@@ -127,7 +130,7 @@ def main():
 
     # Setting up space for graph and readability for graph
     plt.plot(x_vals, y_vals, label=f"f(x) = {symbolic_f}", color="blue")
-    plt.title(f"Function f(x) on a 2D Graph")
+    plt.title(f"Function f(x) = {symbolic_f} on a 2D Graph")
     plt.xlabel("x")
     plt.ylabel("f(x)")
     plt.legend()
@@ -191,17 +194,26 @@ def main():
 
     ax.plot([0, 0], [0, 0], [z_center - z_axis_length / 2, z_center + z_axis_length / 2], 
             color='blue', linewidth=2, label="Z-axis")  # Z-axis
-
+    
 
     # Settings for proper viewability
-    ax.set_title(f"Surface of Rotation around {axis}-axis")
+    ax.set_title(f"Surface of Rotation around {axis}-axis of f(x) = {symbolic_f}")
     ax.set_xlabel("X axis", fontweight="bold")
     ax.set_ylabel("Y axis", fontweight="bold")
     ax.set_zlabel("Z axis", fontweight="bold")
     ax.legend(loc="upper left")
     plt.figtext(0.40, 0.95, f"Surface Area (around {axis}-axis): {surface_area:.3f}")
     plt.axis('equal')
+    end_time = time.perf_counter()
+
+    elapsed_time = end_time - start_time
+
+    print("\n\n\nElapsed Time: " + str(elapsed_time) + " seconds\n\n\n")
     plt.show()
 
+
 if __name__ == "__main__":
+
     main()
+
+    
